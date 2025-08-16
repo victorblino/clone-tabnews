@@ -17,13 +17,4 @@ test("POST to /api/v1/migrations should return 200", async () => {
   const firstResponseBody = await firstResponse.json();
 
   expect(Array.isArray(firstResponseBody)).toBe(true);
-
-  const secondResponse = await fetch(
-    "http://localhost:3000/api/v1/migrations",
-    {
-      method: "POST",
-    },
-  );
-
-  const secondResponseBody = await secondResponse.json();
 });
