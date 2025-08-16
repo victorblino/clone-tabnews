@@ -1,6 +1,7 @@
 import database from "infra/database";
 const dotenv = require("dotenv")
 
+
 dotenv.config({path: '.env.development'})
 
 async function cleanDatabase() {
