@@ -1,13 +1,13 @@
 import database from "infra/database";
-const dotenv = require("dotenv")
+const dotenv = require("dotenv");
 
-dotenv.config({path: '.env.development'})
+dotenv.config({ path: ".env.development" });
 
 async function cleanDatabase() {
-  await database.query("drop schema public cascade; create schema public;")
+  await database.query("drop schema public cascade; create schema public;");
 }
 
-beforeAll(cleanDatabase)
+beforeAll(cleanDatabase);
 
 test("POST to /api/v1/migrations should return 200", async () => {
   const firstResponse = await fetch("http://localhost:3000/api/v1/migrations", {
@@ -18,10 +18,12 @@ test("POST to /api/v1/migrations should return 200", async () => {
 
   expect(Array.isArray(firstResponseBody)).toBe(true);
 
-  const secondResponse = await fetch("http://localhost:3000/api/v1/migrations", {
-    method: "POST",
-  });
+  const secondResponse = await fetch(
+    "http://localhost:3000/api/v1/migrations",
+    {
+      method: "POST",
+    },
+  );
 
   const secondResponseBody = await secondResponse.json();
-
-}); 
+});
