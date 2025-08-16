@@ -16,14 +16,4 @@ jobs:
 
       - run: npm ci
 
-      - name: Start services (docker compose)
-        run: docker compose -f infra/compose.yaml up -d
-
-      - name: Wait for Postgres
-        run: |
-          until docker exec postgres-dev pg_isready -U postgres -d tabnews; do
-            echo "Waiting for postgres..."
-            sleep 2
-          done
-
       - run: npm test
