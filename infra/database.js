@@ -1,9 +1,9 @@
 import { Client } from "pg";
 
 async function query(queryObject) {
-  let client; 
+  let client;
   try {
-    client = await getNewClient()
+    client = await getNewClient();
     const result = await client.query(queryObject);
     return result;
   } catch (error) {
@@ -23,7 +23,7 @@ async function getNewClient() {
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
-  });  
+  });
 
   await client.connect();
   return client;

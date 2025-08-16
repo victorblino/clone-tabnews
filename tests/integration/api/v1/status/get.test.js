@@ -7,9 +7,11 @@ test("GET to /api/v1/status should return 200", async () => {
   const parsedUpdatedAt = new Date(responseBody.update_at).toISOString();
   expect(responseBody.update_at).toEqual(parsedUpdatedAt);
 
-  expect(responseBody.dependecies.database.postgres_version).toEqual('16.10');
+  expect(responseBody.dependecies.database.postgres_version).toEqual("16.10");
 
   expect(responseBody.dependecies.database.max_connections).toEqual(100);
-  
-  expect(responseBody.dependecies.database.opened_connections).toBeGreaterThanOrEqual(1);
+
+  expect(
+    responseBody.dependecies.database.opened_connections,
+  ).toBeGreaterThanOrEqual(1);
 });
