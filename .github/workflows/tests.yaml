@@ -13,6 +13,13 @@ jobs:
         with:
           node-version: "lts/hydrogen"
 
+      - name: Wait for Postgres
+        run: |
+          until docker exec postgres-dev pg_isready -U postgres; do
+            echo "Waiting for postgres..."
+            sleep 2
+          done
+
       - run: npm ci
 
       - run: npm test
