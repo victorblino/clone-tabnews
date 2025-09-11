@@ -1,9 +1,11 @@
 import database from "infra/database";
+import orchestrator from "tests/orchestrator";
 const dotenv = require("dotenv");
 
 dotenv.config({ path: ".env.development" });
 
 async function cleanDatabase() {
+  await orchestrator.waitForAllServices();
   await database.query("drop schema public cascade; create schema public;");
 }
 
