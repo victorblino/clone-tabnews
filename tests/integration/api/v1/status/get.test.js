@@ -1,3 +1,7 @@
+const { default: orchestrator } = require("tests/orchestrator");
+
+beforeAll(orchestrator.waitForAllServices);
+
 describe("GET to /api/v1/status", () => {
   describe("Anonymous User", () => {
     test("GET to /api/v1/status should return 200", async () => {
