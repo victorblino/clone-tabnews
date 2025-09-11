@@ -9,6 +9,20 @@ async function cleanDatabase() {
 
 beforeAll(cleanDatabase);
 
+describe("POST to /api/v1/migrations", () => {
+  describe("Anonymous User", () => {
+    test("should return 200", async () => {
+      const firstResponse = await fetch(
+        "http://localhost:3000/api/v1/migrations",
+        {
+          method: "POST",
+        },
+      );
+      expect(firstResponse.status).toBe(201);
+    });
+  });
+});
+
 test("POST to /api/v1/migrations should return 200", async () => {
   const firstResponse = await fetch("http://localhost:3000/api/v1/migrations", {
     method: "POST",
