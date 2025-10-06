@@ -17,7 +17,7 @@ function UpdateAt() {
 
     updateAtText = new Date(data.update_at).toLocaleString("pt-BR");
   }
-  return updateAtText;
+  return "Última atualização:" + updateAtText;
 }
 
 function DatabaseStatus() {
@@ -26,16 +26,20 @@ function DatabaseStatus() {
   });
 
   console.log(data);
-  
 
   let databaseStatusText = "Carregando...";
   if (!isLoading && data) {
     databaseStatusText = (
       <>
         <div>
-          <p>Versão do Postgres: {data.dependecies.database.postgres_version}</p>
+          <p>
+            Versão do Postgres: {data.dependecies.database.postgres_version}
+          </p>
           <p>Máximo de conexões: {data.dependecies.database.max_connections}</p>
-          <p>Conexões abertas na DB: {data.dependecies.database.opened_connections}</p>
+          <p>
+            Conexões abertas na DB:{" "}
+            {data.dependecies.database.opened_connections}
+          </p>
         </div>
       </>
     );
