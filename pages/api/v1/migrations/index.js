@@ -2,42 +2,30 @@ import migrationRunner from "node-pg-migrate";
 import { resolve } from "node:path";
 import database from "infra/database";
 import { createRouter } from "next-connect";
-import { MethodNotAllowed, InternalServerError } from "infra/errors";
+import controller from "infra/controller";
 
 const router = createRouter();
 
 router.get(getHandler).post(postHandler);
 
-export default router.handler({
-  onNoMatch: onNoMatchHandler,
-  onError: onErrorHandler,
-});
+export default router.handler(controller.errorHandlers);
 
-function onNoMatchHandler(request, response) {
-  const publicErrorObject = new MethodNotAllowed();
-  response
-    .status(publicErrorObject.statusCode)
-    .json(publicErrorObject.toJson());
-}
-
-function onErrorHandler(error, request, response) {
-  const publicErrorObject = new InternalServerError({ cause: error });
-  response.status(500).json(publicErrorObject.toJson());
-}
+const defaultMigrationsOptions = {
+  dryRun: true,
+  dir: resolve("infra", "migrations"),
+  direction: "up",
+  verbose: true,
+  migrationsTable: "pgmigrations",
+};
 
 async function getHandler(request, response) {
   let dbClient;
   try {
     dbClient = await database.getNewClient();
-    const defaultMigrationsOptions = {
-      dbClient: dbClient,
-      dryRun: true,
-      dir: resolve("infra", "migrations"),
-      direction: "up",
-      verbose: true,
-      migrationsTable: "pgmigrations",
-    };
-    const pendingMigrations = await migrationRunner(defaultMigrationsOptions);
+    const pendingMigrations = await migrationRunner({
+      ...defaultMigrationsOptions,
+      dbClient,
+    });
     return response.status(200).json(pendingMigrations);
   } finally {
     dbClient.end();
@@ -48,18 +36,11 @@ async function postHandler(request, response) {
   let dbClient;
   try {
     dbClient = await database.getNewClient();
-    const defaultMigrationsOptions = {
-      dbClient: dbClient,
-      dryRun: true,
-      dir: resolve("infra", "migrations"),
-      direction: "up",
-      verbose: true,
-      migrationsTable: "pgmigrations",
-    };
 
     const migratedMigrations = await migrationRunner({
       ...defaultMigrationsOptions,
       dryRun: false,
+      dbClient,
     });
 
     if (migratedMigrations.length > 0) {
